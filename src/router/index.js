@@ -24,6 +24,11 @@ const router = createRouter({
       name: "historial",
       component: () => import("../views/RecordView.vue"),
     },
+    {
+      path: "/login",
+      name: "login",
+      component: () => import("../views/LoginView.vue"),
+    },
   ],
 });
 export default router;

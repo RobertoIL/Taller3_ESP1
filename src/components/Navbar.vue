@@ -12,7 +12,7 @@
                 </RouterLink>
                 <RouterLink to="/juego">
                     <li><a href="#" class="text-gray-300 hover:text-white">Juego</a></li>
-                </RouterLink>]
+                </RouterLink>
                 <RouterLink to="/historial">
                     <li><a href="#" class="text-gray-300 hover:text-white">Historial</a></li>
                 </RouterLink>
