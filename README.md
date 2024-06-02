@@ -1,4 +1,7 @@
-# ./
+# Taller 3 - Especialización tecnológica I
+#### Integrantes:
+- Roberto Illesca
+- Bastian Lagos
 
 This template should help get you started developing with Vue 3 in Vite.
 
