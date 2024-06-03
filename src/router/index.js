@@ -1,4 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { useAuthStore } from "../stores/authStore.js";
+import { getActivePinia, setActivePinia } from "pinia";
+import { createPinia } from "pinia";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -13,16 +16,19 @@ const router = createRouter({
       path: "/wiki",
       name: "wiki",
       component: () => import("../views/WikiView.vue.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/juego",
       name: "juego",
       component: () => import("../views/GameView.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/historial",
       name: "historial",
       component: () => import("../views/RecordView.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/login",
@@ -30,5 +36,17 @@ const router = createRouter({
       component: () => import("../views/LoginView.vue"),
     },
   ],
+});
+
+const pinia = createPinia();
+setActivePinia(pinia);
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    next("/login");
+  } else {
+    next();
+  }
 });
 export default router;

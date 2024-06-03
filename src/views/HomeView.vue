@@ -8,5 +8,22 @@
     </main>
 </template>
 
-<script setup>
+<script>
+// import { useUserStore } from '../stores/userStore.js';
+
+// export default {
+//   setup() {
+//     const userStore = useUserStore();
+
+//     const logout = () => {
+//       userStore.logout();
+//     };
+
+//     return {
+//       isAuthenticated: computed(() => userStore.isAuthenticated),
+//       user: computed(() => userStore.getUser),
+//       logout,
+//     };
+//   },
+// };
 </script>
