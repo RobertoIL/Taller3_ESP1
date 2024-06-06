@@ -5,25 +5,17 @@
                     JUGAR
                 </button>
         </RouterLink>
+
+        <Carousel />
+
     </main>
 </template>
 
 <script>
-// import { useUserStore } from '../stores/userStore.js';
-
-// export default {
-//   setup() {
-//     const userStore = useUserStore();
-
-//     const logout = () => {
-//       userStore.logout();
-//     };
-
-//     return {
-//       isAuthenticated: computed(() => userStore.isAuthenticated),
-//       user: computed(() => userStore.getUser),
-//       logout,
-//     };
-//   },
-// };
+import Carousel from '../components/Carousel.vue';
+export default {
+    components: {
+        Carousel,
+    }
+}
 </script>
