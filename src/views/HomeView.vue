@@ -7,7 +7,7 @@
                         Disfruta jugando sin límites
                     </h1>
                     <p class="mt-6 text-lg leading-8 text-gray-300 opacity-90">
-                        Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.
+                        ¡Podrás seleccionar al personaje que gustes para iniciar la partida!
                     </p>
                     <div class="mt-10 flex items-center justify-center gap-x-6">
                         <RouterLink to="/juego">
