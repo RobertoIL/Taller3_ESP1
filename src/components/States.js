@@ -1,3 +1,5 @@
+import soundEffect from '@/assets/attackSound.wav';
+
 const states ={
     IDLE: 0,
     MOVING: 1,
@@ -12,6 +14,8 @@ const directions={
 class State{
     constructor(state){
         this.state = state;
+        this.soundEffect = new Audio();
+        this.soundEffect.src = soundEffect;
     }
 }
 export class Idle extends State{
@@ -167,6 +171,10 @@ export class Attacking extends State{
                     this.fila++;
                 }else{
                     this.atacando = false;
+                }
+                //Condicional para ejecutar el sonido, en este caso seria cuando la  animacion este 3 frames antes del final.
+                if(this.fila == this.maxFila-3){
+                    this.soundEffect.play();
                 }
             }
             this.gameFrame++;

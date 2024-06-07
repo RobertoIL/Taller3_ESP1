@@ -3,6 +3,10 @@
         <div class="canvas-container">
             <canvas id="canvas1" ref="canvas"></canvas>
         </div>
+        <div class="music">
+            <button v-if="!isPlaying" @click="playMusic">Play Music</button>
+            <button v-else @click="stopMusic">Stop Music</button>
+        </div>
     </div>
 </template>
 <script>
@@ -20,6 +24,8 @@ import lancerData from '@/assets/Lancer/Lancer.json';
 import archerWalkImg from '@/assets/Archer/Walk.png';
 import archerAttackImg from '@/assets/Archer/Attack.png';
 import archerData from '@/assets/Archer/Archer.json';
+import music from '@/assets/music.mp3';
+import soundEffect from '@/assets/attackSound.wav';
 
 export default {
   name: 'Game',
@@ -39,7 +45,9 @@ export default {
       gameState: "menu",
       player2Logged: false,
       player1Logged: false,
-      sprites: []
+      songPlay: new Audio(),
+      soundEffect: new Audio(),
+      isPlaying: false,
     };
   },
   mounted() {
@@ -50,11 +58,8 @@ export default {
     this.attackingFrames.src = mageAttackImg;
     this.walkingFramesP2.src = mageWalkImg;
     this.attackingFramesP2.src = mageAttackImg;
-    this.walkingFrames.onload = ()=>{
-      this.imagesLoaded++;
-      this.sprites.push(this.walkingFrames)
-    };
-
+    this.songPlay.src = music;
+    this.soundEffect.src = soundEffect;
   },
   methods: {
     dibujar() {
@@ -262,6 +267,16 @@ export default {
     },
     destroyed() {
       window.removeEventListener('resize', this.dibujar);
+    },
+
+    //Metodos para parar o continuar la musica
+    playMusic(){
+      this.songPlay.play();
+      this.isPlaying = true;
+    },
+    stopMusic(){
+      this.songPlay.pause();
+      this.isPlaying = false;
     }
   }
 };
