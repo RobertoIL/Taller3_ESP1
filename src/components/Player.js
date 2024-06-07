@@ -15,7 +15,7 @@ export class Player{
         this.imageAttack = attackingFrames;
         this.xSpeed = 0;
         this.ySpeed = 0;
-        this.maxSpeed = 2;
+        this.maxSpeed = 3;
         this.states = [new Idle(this), new Moving(this), new Attacking(this)];
         this.directions = ["up","left","down","rigth"];
         this.currentDirection = this.directions[2];
@@ -68,7 +68,7 @@ export class Player{
         if(this.x > this.game.width - this.width){this.x = this.game.width-this.width;}
         if(this.y < 0){this.y = 0;}
         if(this.y > this.game.height-this.height){this.y = this.game.height-this.height;}
-        this.currentState.handleInput(input, fps);
+        this.currentState.handleInput(input);
         this.updateSize();
     }
     draw(context){

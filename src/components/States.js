@@ -82,7 +82,7 @@ export class Moving extends State{
         this.columna = 0;
         this.lastDirection = this.player.currentDirection;
         this.gameFrame = 0;
-        this.staggerFrame = 15;
+        this.staggerFrame = 10;
     }
     enter(){
         if (this.lastDirection != this.player.currentDirection) {
@@ -162,7 +162,7 @@ export class Attacking extends State{
         }else if(input.includes("q") && !this.atacando){
             this.actualizarDireccion();
         }else{
-            if (this.gameFrame % this.staggerFrame == 0) {
+            if (this.gameFrame % this.staggerFrame == 0 && this.gameFrame != 0) {
                 if (this.fila < this.maxFila){
                     this.fila++;
                 }else{
