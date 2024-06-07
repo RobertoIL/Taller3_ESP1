@@ -23,7 +23,11 @@ export class Player {
     this.currentState = this.states[0];
     this.currentState.enter();
     this.lastFrame = this.frame;
-    this.health = 100;
+    this.name = "";
+    this.totalLife = 100;
+    this.life = 100;
+    this.damage = 20;
+    this.playerN = 1;
   }
   update(input) {
     this.x += this.xSpeed;
@@ -80,8 +84,8 @@ export class Player {
     if (this.x > this.game.width - this.width) {
       this.x = this.game.width - this.width;
     }
-    if (this.y < 0) {
-      this.y = 0;
+    if (this.y < 100) {
+      this.y = 100;
     }
     if (this.y > this.game.height - this.height) {
       this.y = this.game.height - this.height;
@@ -113,6 +117,58 @@ export class Player {
   drawCanvas(context, X, Y) {
     context.fillStyle = "red";
     context.fillRect(X, Y, this.width, this.height);
+
+    if (this.playerN == 1) {
+      context.fillStyle = "black";
+      context.fillRect(10, 25, this.totalLife, 25);
+
+      context.fillStyle = "white";
+      context.font = "15px Arial";
+      context.textAlign = "left";
+      //Aqui va el nombre del jugador, asignado segun usuario logeado.
+      context.fillText("Bastian", 15, 42.5, this.totalLife * 3);
+
+      context.fillStyle = "red";
+      context.fillRect(10, 50, this.totalLife * 3, 25);
+
+      context.fillStyle = "green";
+      context.fillRect(10, 50, this.life * 3, 25);
+    } else {
+      context.fillStyle = "black";
+      context.fillRect(
+        this.game.width - 10 - this.totalLife * 3,
+        25,
+        this.totalLife,
+        25
+      );
+
+      context.fillStyle = "white";
+      context.font = "15px Arial";
+      context.textAlign = "left";
+      context.fillText(
+        "Bastian",
+        this.game.width - 5 - this.totalLife * 3,
+        42.5,
+        this.totalLife * 3
+      );
+
+      context.fillStyle = "red";
+      context.fillRect(
+        this.game.width - 10 - this.totalLife * 3,
+        50,
+        this.totalLife * 3,
+        25
+      );
+
+      context.fillStyle = "green";
+      context.fillRect(
+        this.game.width - 10 - this.totalLife * 3,
+        50,
+        this.life * 3,
+        25
+      );
+    }
+
     context.drawImage(
       this.image,
       this.frame.x, //En el archivo JSON es el valor de X
@@ -132,5 +188,11 @@ export class Player {
   updateSize() {
     this.width = this.frame.width;
     this.height = this.frame.height;
+  }
+  setName(name) {
+    this.name = name;
+  }
+  setPlayerN(playerN) {
+    this.playerN = playerN;
   }
 }
