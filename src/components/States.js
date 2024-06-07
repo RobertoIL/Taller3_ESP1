@@ -4,6 +4,7 @@ const states = {
   IDLE: 0,
   MOVING: 1,
   ATTACKING: 2,
+  DEAD: 3,
 };
 const directions = {
   UP: 0,

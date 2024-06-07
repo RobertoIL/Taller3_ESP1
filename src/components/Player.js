@@ -26,9 +26,12 @@ export class Player {
     this.name = "";
     this.totalLife = 100;
     this.life = 100;
-    this.damage = 20;
+    this.damage = 10;
     this.playerN = 1;
     this.classType = "";
+    // this.canvasContext = document
+    //   .getElementById("yourCanvasId")
+    //   .getContext("2d");
   }
   update(input) {
     this.x += this.xSpeed;
@@ -193,4 +196,49 @@ export class Player {
   setPlayerN(playerN) {
     this.playerN = playerN;
   }
+
+  // Método para verificar si el jugador está atacando
+  isAttacking() {
+    return this.currentState instanceof Attacking;
+  }
+
+  // Método para recibir daño
+  receiveDamage(amount) {
+    this.life -= amount;
+    //this.updateLifeBar();
+    // Comprueba si el jugador ha perdido toda su vida
+    if (this.life <= 0) {
+      //this.setState(3);
+      console.log("El jugador ha muerto");
+    }
+  }
+  getPosition() {
+    console.log(this.x, this.y, this.width, this.height);
+    console.log("frame= " + this.frame);
+    return {
+      // x: this.x,
+      // y: this.y,
+      // width: this.width,
+      // height: this.height,
+    };
+  }
+  // updateLifeBar(context) {
+  //   // this.canvasContext.clearRect(
+  //   //   0,
+  //   //   0,
+  //   //   this.canvasContext.canvas.width,
+  //   //   this.canvasContext.canvas.height
+  //   // );
+
+  //   // Borra la barra de vida actual
+  //   context.clearRect(10, 50, this.totalLife * 3, 25);
+
+  //   // Dibuja la barra de vida total
+  //   context.fillStyle = "red";
+  //   context.fillRect(10, 50, this.totalLife * 3, 25);
+
+  //   // Dibuja la vida actual
+  //   context.fillStyle = "green";
+  //   context.fillRect(10, 50, this.life * 3, 25);
+  // }
 }

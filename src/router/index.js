@@ -11,6 +11,7 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: () => import("../views/HomeView.vue"),
+      meta: { requiresAuth: false },
     },
     {
       path: "/wiki",
@@ -28,7 +29,7 @@ const router = createRouter({
       path: "/historial",
       name: "historial",
       component: () => import("../views/RecordView.vue"),
-      meta: { requiresAuth: true },
+      meta: { requiresAuth: false },
     },
     {
       path: "/login",

@@ -15,8 +15,8 @@
 import { Player } from './Player';
 import { InputHandler } from './InputHandler';
 // Importaciones para saber quien es el usuario logeado
-//import { useAuthStore } from '../stores/authStore.js';
-//import { ref } from 'vue';
+import { useAuthStore } from '../stores/authStore.js';
+import { ref } from 'vue';
 
 import mageWalkImg from '@/assets/Mage/Walk.png';
 import mageAttackImg from '@/assets/Mage/Attack.png';
@@ -57,10 +57,10 @@ data() {
     startingImages: null,
     allJsonsDatas: null,
     // Logica para saber el nombre del usuario logeado.
-    //authStore: useAuthStore(),
-    //isAuthenticated: ref(this.authStore.isAuthenticated),
-    //nombreUser: ref(this.authStore.user?.username)
-    nombreUser: "bastian"
+    authStore: useAuthStore(),
+    isAuthenticated: ref(this.authStore.isAuthenticated),
+    nombreUser: ref(this.authStore.user?.username)
+    //nombreUser: ""
   };
 },
 async mounted() {
