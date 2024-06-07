@@ -226,8 +226,7 @@ methods: {
       { text: 'anterior', player: 2, x:this.$refs.canvas.width/2/4+this.$refs.canvas.width/2, y: this.$refs.canvas.height/2,width: 75, height: 25  },
       { text: 'siguiente', player: 2, x:this.$refs.canvas.width*3/2/4+this.$refs.canvas.width/2, y: this.$refs.canvas.height/2,width: 75, height: 25  },
       { text: 'Listo', player: 1, x: this.$refs.canvas.width/4, y: this.$refs.canvas.height*3/4, width: 100, height: 50 , color: "red"},
-      { text: 'Listo', player: 2, x: this.$refs.canvas.width*3/4, y: this.$refs.canvas.height*3/4, width: 100, height: 50 , color: "red"},
-      {text: 'test', x:this.$refs.canvas.width*3/4, y: 100, width:100, height:100}
+      { text: 'Listo', player: 2, x: this.$refs.canvas.width*3/4, y: this.$refs.canvas.height*3/4, width: 100, height: 50 , color: "red"}
     ];
 
     const drawButton = (button) => {
@@ -258,7 +257,7 @@ methods: {
       const y = (event.clientY - rect.top) * scaleY;
 
       buttons.forEach(button => {
-          if (x > button.x-button.width && x < button.x + button.width/2 && 
+          if (x > button.x-button.width/2 && x < button.x + button.width/2 && 
               y > button.y && y < button.y + button.height) {
               handleButtonClick(button.text, button.player);
           }
