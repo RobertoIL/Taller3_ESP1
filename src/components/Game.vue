@@ -12,6 +12,9 @@
 <script>
 import { Player } from './Player';
 import { InputHandler } from './InputHandler';
+//import { useAuthStore } from '../stores/authStore.js';
+//import { ref } from 'vue';
+
 import mageWalkImg from '@/assets/Mage/Walk.png';
 import mageAttackImg from '@/assets/Mage/Attack.png';
 import mageData from '@/assets/Mage/Mage.json';
@@ -49,7 +52,11 @@ data() {
     soundEffect: new Audio(),
     isPlaying: false,
     startingImages: null,
-    allJsonsDatas: null
+    allJsonsDatas: null,
+    //authStore: useAuthStore(),
+    //isAuthenticated: ref(this.authStore.isAuthenticated),
+    //nombreUser: ref(this.authStore.user?.username)
+    nombreUser: "bastian"
   };
 },
 async mounted() {
@@ -439,6 +446,15 @@ methods: {
       this.height = height;
       this.player = new Player(this, JsonData, walkingFrames, attackingFrames, 0, 125, {"up":"w","left":"a","down":"s","rigth":"d","attack":"q"});
       this.player2 = new Player(this, JsonDataP2, walkingFramesP2, attackingFramesP2, 500, 125, {"up":"i","left":"j","down":"k","rigth":"l","attack":"u"});
+      if (this.nombreUser ==="bastian") {
+        this.player.setName(this.nombreUser);
+        this.player2.setName("roberto");
+      }else{
+        this.player2.setName(this.nombreUser);
+        this.player.setName("roberto");
+      }
+      this.player.setPlayerN(1);
+      this.player2.setPlayerN(2);
       this.input = new InputHandler();
     }
     update() {
@@ -470,7 +486,6 @@ methods: {
 #canvas1 {
   margin-top: 5px;
   width: 100%;
-  border: 1px solid gray;
 }
 .container{
   max-width: 100%;
@@ -480,6 +495,7 @@ methods: {
 }
 .canvas-container{
   width: 80%;
+  background-image: url('@/assets/piso.png');
 }
 .button-container{
   display: flex;
