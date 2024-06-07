@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        "login-background": "url('/images/bg_login.jpg')",
-        home_background: "url('/images/bg_home.jpg')",
+        "login-background": "url('/images/background/bg_login.jpg')",
+        home_background: "url('/images/background/bg_home.jpg')",
       },
       fontFamily: {
         font_tittle: "Montserrat",
