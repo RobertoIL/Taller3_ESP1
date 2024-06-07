@@ -1,5 +1,5 @@
 <template>
-  <main class="flex justify-center py-20 text-white">
+  <main class="flex justify-center py-20 text-white bg-home_background">
     <div class="bg-slate-800 rounded-lg opacity-90 flex flex-col items-center justify-center w-1/3">
       <img src="/public/images/background/logo.png" alt="" class="w-52 h-52">
       <h1 class="text-center text-3xl font-bold pb-5 font-font_tittle">Iniciar Sesión</h1>
