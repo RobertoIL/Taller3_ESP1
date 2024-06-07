@@ -159,7 +159,7 @@ export class Attacking extends State{
         this.player.image = this.player.imageAttack;
         this.atacando = true;
     }
-    handleInput(input, teclas){
+    handleInput(input, teclas, classType){
         let mov = [teclas.up, teclas.left, teclas.down, teclas.rigth];
         if(mov.some(t=> input.includes(t)) && !this.atacando){
             this.player.setState(states.MOVING);
