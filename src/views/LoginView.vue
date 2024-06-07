@@ -1,7 +1,7 @@
 <template>
   <main class="flex justify-center py-20 text-white">
     <div class="bg-slate-800 rounded-lg opacity-90 flex flex-col items-center justify-center w-1/3">
-      <img src="/public/images/logo.png" alt="" class="w-52 h-52">
+      <img src="/public/images/background/logo.png" alt="" class="w-52 h-52">
       <h1 class="text-center text-3xl font-bold pb-5 font-font_tittle">Iniciar Sesión</h1>
       <form @submit.prevent="login">
         <div class="mb-4">
