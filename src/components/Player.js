@@ -28,6 +28,7 @@ export class Player {
     this.life = 100;
     this.damage = 20;
     this.playerN = 1;
+    this.classType = "";
   }
   update(input) {
     this.x += this.xSpeed;
@@ -90,7 +91,7 @@ export class Player {
     if (this.y > this.game.height - this.height) {
       this.y = this.game.height - this.height;
     }
-    this.currentState.handleInput(input, this.keys);
+    this.currentState.handleInput(input, this.keys, this.classType);
     this.updateSize();
   }
   draw(context) {
@@ -115,9 +116,6 @@ export class Player {
     this.drawCanvas(context, drawX, drawY);
   }
   drawCanvas(context, X, Y) {
-    context.fillStyle = "red";
-    context.fillRect(X, Y, this.width, this.height);
-
     if (this.playerN == 1) {
       context.fillStyle = "black";
       context.fillRect(10, 25, this.totalLife, 25);
