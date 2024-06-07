@@ -1,5 +1,6 @@
 <template>
-  <div class="container" ref="canvasContainer">
+  <main class="bg-gray-800">
+    <div class="container" ref="canvasContainer">
       <div class="canvas-container">
           <canvas id="canvas1" ref="canvas"></canvas>
       </div>
@@ -7,7 +8,8 @@
           <button v-if="!isPlaying" @click="playMusic">Play Music</button>
           <button v-else @click="stopMusic">Stop Music</button>
       </div>
-  </div>
+    </div>
+  </main>
 </template>
 <script>
 import { Player } from './Player';
