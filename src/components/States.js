@@ -1,4 +1,4 @@
-import soundEffect from "@/assets/attackSound.wav";
+import soundEffect from "../assets/attackSound.wav";
 
 const states = {
   IDLE: 0,
