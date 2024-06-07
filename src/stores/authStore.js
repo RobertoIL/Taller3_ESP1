@@ -11,10 +11,27 @@ export const useAuthStore = defineStore("auth", {
   },
   actions: {
     login(user) {
-      this.user = user;
+      const foundUser = usuarios_registrados.find(
+        (u) => u.username === user.username && u.password === user.password
+      );
+      if (foundUser) {
+        this.user = user;
+        return true;
+      } else return false;
     },
     logout() {
       this.user = null;
     },
   },
 });
+
+const usuarios_registrados = [
+  {
+    username: "bastian",
+    password: "1234",
+  },
+  {
+    username: "roberto",
+    password: "1234",
+  },
+];

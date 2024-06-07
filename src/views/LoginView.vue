@@ -1,7 +1,7 @@
 <template>
-  <main class="flex justify-center py-20 text-white">
+  <main class="flex justify-center py-20 text-white bg-home_background">
     <div class="bg-slate-800 rounded-lg opacity-90 flex flex-col items-center justify-center w-1/3">
-      <img src="/public/images/logo.png" alt="" class="w-52 h-52">
+      <img src="/public/images/background/logo.png" alt="" class="w-52 h-52">
       <h1 class="text-center text-3xl font-bold pb-5 font-font_tittle">Iniciar Sesión</h1>
       <form @submit.prevent="login">
         <div class="mb-4">
@@ -33,10 +33,12 @@
         <button
           tag="button"
           type="submit"
-          class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
+          class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
           Entrar
         </button>
+        <div v-if="errorMessage" class="mt-4 text-red-500 text-sm">
+          {{ errorMessage }}
+        </div>
       </form>
     </div>
   </main>
@@ -53,17 +55,26 @@ export default {
     const router = useRouter()
     const username = ref('')
     const password = ref('')
+    const errorMessage = ref('')
 
     const login = () => {
-      authStore.login({ username: username.value, password: password.value })
-      router.push("/")
+      const user = { username: username.value, password: password.value }
+      const isAuthenticated = authStore.login(user)
+      if (isAuthenticated) {
+        errorMessage.value = ''
+        router.push("/")
+      } else {
+        errorMessage.value = 'Nombre de usuario o contraseña incorrectos.'
+      }
     }
 
     return {
       username,
       password,
-      login
+      login,
+      errorMessage
     }
   }
 }
 </script>
+

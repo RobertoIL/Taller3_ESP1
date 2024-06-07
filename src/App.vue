@@ -1,6 +1,6 @@
 <template class="">
     <Navbar v-if="!isLoginPage" />
-    <RouterView class="min-h-screen bg-home_background"/>
+    <RouterView class="min-h-screen"/>
     <Footer v-if="!isLoginPage" />
 </template>
 
