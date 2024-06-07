@@ -14,6 +14,10 @@
 <script>
 import { Player } from './Player';
 import { InputHandler } from './InputHandler';
+// Importaciones para saber quien es el usuario logeado
+//import { useAuthStore } from '../stores/authStore.js';
+//import { ref } from 'vue';
+
 import mageWalkImg from '@/assets/Mage/Walk.png';
 import mageAttackImg from '@/assets/Mage/Attack.png';
 import mageData from '@/assets/Mage/Mage.json';
@@ -45,13 +49,18 @@ data() {
     gameStarted: false,
     gameStates: ["menu", "select", "game"],
     gameState: "menu",
-    player2Logged: false,
-    player1Logged: false,
+    player1Class: "",
+    player2Class: "",
     songPlay: new Audio(),
     soundEffect: new Audio(),
     isPlaying: false,
     startingImages: null,
-    allJsonsDatas: null
+    allJsonsDatas: null,
+    // Logica para saber el nombre del usuario logeado.
+    //authStore: useAuthStore(),
+    //isAuthenticated: ref(this.authStore.isAuthenticated),
+    //nombreUser: ref(this.authStore.user?.username)
+    nombreUser: "bastian"
   };
 },
 async mounted() {
@@ -62,6 +71,9 @@ async mounted() {
     this.gameState = this.gameStates[0];
     this.dibujar();
     window.addEventListener('resize', this.dibujar);
+    this.$refs.canvas.addEventListener('mousedown', function(event) {
+      event.preventDefault();
+    });
     this.songPlay.src = music;
     this.soundEffect.src = soundEffect;
   } catch (error) {
@@ -71,73 +83,69 @@ async mounted() {
 },
 methods: {
   async cargarRecursos() {
-      const imagenesA_cargar = [
-        { src: archerWalkImg, key: 'archerWalk' },
-        { src: mageWalkImg, key: 'mageWalk' },
-        { src: saberWalkImg, key: 'saberWalk' },
-        { src: lancerWalkImg, key: 'lancerWalk' },
-        { src: archerAttackImg, key: 'archerAttack' },
-        { src: mageAttackImg, key: 'mageAttack' },
-        { src: saberAttackImg, key: 'saberAttack' },
-        { src: lancerAttackImg, key: 'lancerAttack' }
-      ];
+    const imagenesA_cargar = [
+      { src: archerWalkImg, key: 'archerWalk' },
+      { src: mageWalkImg, key: 'mageWalk' },
+      { src: saberWalkImg, key: 'saberWalk' },
+      { src: lancerWalkImg, key: 'lancerWalk' },
+      { src: archerAttackImg, key: 'archerAttack' },
+      { src: mageAttackImg, key: 'mageAttack' },
+      { src: saberAttackImg, key: 'saberAttack' },
+      { src: lancerAttackImg, key: 'lancerAttack' }
+    ];
 
-      const jsonsA_cargar = [
-        { src: archerData, key: 'archerJSON' },
-        { src: mageData, key: 'mageJSON' },
-        { src: saberData, key: 'saberJSON' },
-        { src: lancerData, key: 'lancerJSON' }
-      ];
+    const jsonsA_cargar = [
+      { src: archerData, key: 'archerJSON' },
+      { src: mageData, key: 'mageJSON' },
+      { src: saberData, key: 'saberJSON' },
+      { src: lancerData, key: 'lancerJSON' }
+    ];
 
-      const promesasImagenes = imagenesA_cargar.map(imgInfo =>
-        this.cargarImagen(imgInfo.src).then(img => ({ key: imgInfo.key, img }))
-      );
+    const promesasImagenes = imagenesA_cargar.map(imgInfo =>
+      this.cargarImagen(imgInfo.src).then(img => ({ key: imgInfo.key, img }))
+    );
 
-      const promesasJSON = jsonsA_cargar.map(jsonInfo =>
-        this.cargarJSON(jsonInfo.src).then(json => ({ key: jsonInfo.key, json }))
-      );
+    const promesasJSON = jsonsA_cargar.map(jsonInfo =>
+      this.cargarJSON(jsonInfo.src).then(json => ({ key: jsonInfo.key, json }))
+    );
 
-      const imagenes = await Promise.all(promesasImagenes);
-      const jsons = await Promise.all(promesasJSON);
+    const imagenes = await Promise.all(promesasImagenes);
+    const jsons = await Promise.all(promesasJSON);
 
-      const resultadoImagenes = {};
-      const resultadoJSON = {};
+    const resultadoImagenes = {};
+    const resultadoJSON = {};
 
-      imagenes.forEach(imagen => {
-        resultadoImagenes[imagen.key] = imagen.img;
-      });
+    imagenes.forEach(imagen => {
+      resultadoImagenes[imagen.key] = imagen.img;
+    });
 
-      jsons.forEach(json => {
-        resultadoJSON[json.key] = json.json;
-      });
+    jsons.forEach(json => {
+      resultadoJSON[json.key] = json.json;
+    });
 
-      return { imagenes: resultadoImagenes, jsons: resultadoJSON };
-    },
-    cargarImagen(src) {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = src;
-        img.onload = () => resolve(img);
-        img.onerror = (err) => reject(err);
-      });
-    },
-    async cargarJSON(url) {
-      // Since you're using imported JSON data, you don't need to fetch them
-      return url;
-    },
+    return { imagenes: resultadoImagenes, jsons: resultadoJSON };
+  },
+  cargarImagen(src) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => resolve(img);
+      img.onerror = (err) => reject(err);
+    });
+  },
+  async cargarJSON(url) {
+    return url;
+  },
+  //Metodo para cambiar tamaño del canvas y actualizar "vista" en el canvas
   dibujar() {
     const canvas = this.$refs.canvas;
     this.ctx = canvas.getContext('2d');
     const container = this.$refs.canvasContainer;
     const rect = container.getBoundingClientRect();
-    const proporcionX = 1000 / rect.width;
-    const proporcionY = 500 / rect.height;
     
     canvas.width = rect.width;
     canvas.height = rect.height;
 
-    const x = 1000 / proporcionX;
-    const y = 500 / proporcionY;
     switch (this.gameState) {
       case "menu":
         this.startGameMenu();
@@ -146,18 +154,14 @@ methods: {
         this.startSelectMenu();
         break;
       case "game":
-        if(this.gameStarted){
-          this.resizeGame();
-        }else{
-          this.startGame();
-        }
+        this.startGame();
         break;
       default:
         break;
     }
   },
 
-  //Dibujo en el canvas del primer menu del juego.
+  //Dibujo en el canvas de la "vista" de menu principal
   startGameMenu(){
     const buttons = [
       { text: 'Jugar', x: this.$refs.canvas.width/2, y: this.$refs.canvas.height/6, width: 100, height: 20 },
@@ -193,7 +197,7 @@ methods: {
               handleButtonClick(button.text);
           }
       });
-  };
+    };
     const handleButtonClick = (buttonText) => {
       switch(buttonText) {
         case 'Jugar':
@@ -215,7 +219,7 @@ methods: {
     this.$refs.canvas.addEventListener('click', handleClick);
     drawMenu();
   },
-  //Dibujo en el canvas del menu de seleccion de personaje
+  //Dibujo en el canvas de la "vista" menu de seleccion de personaje
   startSelectMenu(){
     let characters = ["saberWalk", "archerWalk", "lancerWalk", "mageWalk"];
     let selectedC1 = 0; // Índice de personaje para el jugador 1
@@ -397,6 +401,8 @@ methods: {
             this.attackingFramesP2 = this.startingImages[characters[selectedC2].replace("Walk", "Attack")];
             this.JsonData = this.allJsonsDatas[characters[selectedC1].replace("Walk","JSON")];
             this.JsonDataP2 = this.allJsonsDatas[characters[selectedC2].replace("Walk","JSON")];
+            this.player1Class = characters[selectedC1].replace("Walk", "");
+            this.player2Class = characters[selectedC2].replace("Walk", "");
             this.gameState="game";
             this.dibujar();
           }
@@ -410,12 +416,14 @@ methods: {
     this.$refs.canvas.addEventListener('click', handleClick);
     drawMenu();
   },
-  // Loop del juego, aqui es donde el juego inicia y se ve la interaccion con los input.
+  // Loop del juego, "vista" en el canvas que se encarga de manejar toda la logica interna del juego.
   startGame() {
     this.game = new this.Game(this.$refs.canvas.width, this.$refs.canvas.height, this.JsonData, this.walkingFrames, this.attackingFrames, this.JsonDataP2, this.walkingFramesP2, this.attackingFramesP2);
     let lastTime = performance.now();
     let frameCount = 0;
     let fps = 0;
+    this.game.player.classType = this.player1Class;
+    this.game.player2.classType = this.player2Class;
 
     const animate = (time) => {
       frameCount++;
@@ -435,12 +443,24 @@ methods: {
 
     requestAnimationFrame(animate);
   },
+  //Clase Game, para mayor claridad a la hora de llamar metodos del jugador dentro o fuera de este.
   Game: class {
     constructor(width, height, JsonData, walkingFrames, attackingFrames, JsonDataP2, walkingFramesP2, attackingFramesP2) {
       this.width = width;
       this.height = height;
       this.player = new Player(this, JsonData, walkingFrames, attackingFrames, 0, 125, {"up":"w","left":"a","down":"s","rigth":"d","attack":"q"});
-      this.player2 = new Player(this, JsonDataP2, walkingFramesP2, attackingFramesP2, 500, 125, {"up":"i","left":"j","down":"k","rigth":"l","attack":"u"});
+      this.player2 = new Player(this, JsonDataP2, walkingFramesP2, attackingFramesP2, this.width, 125, {"up":"i","left":"j","down":"k","rigth":"l","attack":"u"});
+      
+      //HardCode de los nombres, al tener solo 2 posibles usuarios, entonces si el usuario logueado posee un nombre, el jugador 2 se asumira que esta logeado con el otro usuario.
+      if (this.nombreUser ==="bastian") {
+        this.player.setName(this.nombreUser);
+        this.player2.setName("roberto");
+      }else{
+        this.player2.setName(this.nombreUser);
+        this.player.setName("roberto");
+      }
+      this.player.setPlayerN(1);
+      this.player2.setPlayerN(2);
       this.input = new InputHandler();
     }
     update() {
@@ -455,8 +475,6 @@ methods: {
   destroyed() {
     window.removeEventListener('resize', this.dibujar);
   },
-
-  //Metodos para parar o continuar la musica
   playMusic(){
     this.songPlay.play();
     this.isPlaying = true;
@@ -472,9 +490,9 @@ methods: {
 #canvas1 {
   margin-top: 5px;
   width: 100%;
-  border: 1px solid gray;
 }
 .container{
+  margin-top: 5px;
   max-width: 100%;
   display: flex;
   flex-direction: column;
@@ -482,6 +500,7 @@ methods: {
 }
 .canvas-container{
   width: 80%;
+  background-image: url('@/assets/piso.png');
 }
 .button-container{
   display: flex;
