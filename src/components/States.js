@@ -1,3 +1,5 @@
+import soundEffect from '@/assets/attackSound.wav';
+
 const states ={
     IDLE: 0,
     MOVING: 1,
@@ -12,6 +14,8 @@ const directions={
 class State{
     constructor(state){
         this.state = state;
+        this.soundEffect = new Audio();
+        this.soundEffect.src = soundEffect;
     }
 }
 export class Idle extends State{
@@ -30,11 +34,11 @@ export class Idle extends State{
         }
         this.player.image = this.player.imageWalk;
     }
-    handleInput(input){
-        let mov = ["w","a","s","d"];
+    handleInput(input, teclas){
+        let mov = [teclas.up, teclas.left, teclas.down, teclas.rigth];
         if(mov.some(t=> input.includes(t))){
             this.player.setState(states.MOVING);
-        }else if(input.includes("q")){
+        }else if(input.includes(teclas.attack)){
             this.player.setState(states.ATTACKING)
         }else{
             if (this.gameFrame % this.staggerFrame == 0) {
@@ -90,14 +94,14 @@ export class Moving extends State{
         }
         this.player.image = this.player.imageWalk;
     }
-    handleInput(input){
+    handleInput(input, teclas){
         if (this.lastDirection != this.player.currentDirection){
             this.actualizarDireccion();
         }
-        let mov = ["w","a","s","d"];
-        if(!mov.some(t=> input.includes(t)) && !input.includes("q")){
+        let mov = [teclas.up, teclas.left, teclas.down, teclas.rigth];
+        if(!mov.some(t=> input.includes(t)) && !input.includes(teclas.attack)){
             this.player.setState(states.IDLE);
-        }else if(input.includes("q")){
+        }else if(input.includes(teclas.attack)){
             this.player.setState(states.ATTACKING)
         }else{
             if (this.gameFrame % this.staggerFrame == 0) {
@@ -153,13 +157,13 @@ export class Attacking extends State{
         this.player.image = this.player.imageAttack;
         this.atacando = true;
     }
-    handleInput(input){
-        let mov = ["w","a","s","d"];
+    handleInput(input, teclas){
+        let mov = [teclas.up, teclas.left, teclas.down, teclas.rigth];
         if(mov.some(t=> input.includes(t)) && !this.atacando){
             this.player.setState(states.MOVING);
-        }else if(!input.includes("q") && !this.atacando){
+        }else if(!input.includes(teclas.attack) && !this.atacando){
             this.player.setState(states.IDLE);
-        }else if(input.includes("q") && !this.atacando){
+        }else if(input.includes(teclas.attack) && !this.atacando){
             this.actualizarDireccion();
         }else{
             if (this.gameFrame % this.staggerFrame == 0 && this.gameFrame != 0) {
@@ -167,6 +171,10 @@ export class Attacking extends State{
                     this.fila++;
                 }else{
                     this.atacando = false;
+                }
+                //Condicional para ejecutar el sonido, en este caso seria cuando la  animacion este 3 frames antes del final.
+                if(this.fila == this.maxFila-3){
+                    this.soundEffect.play();
                 }
             }
             this.gameFrame++;

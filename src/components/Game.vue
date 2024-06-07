@@ -3,16 +3,29 @@
         <div class="canvas-container">
             <canvas id="canvas1" ref="canvas"></canvas>
         </div>
+        <div class="music">
+            <button v-if="!isPlaying" @click="playMusic">Play Music</button>
+            <button v-else @click="stopMusic">Stop Music</button>
+        </div>
     </div>
 </template>
 <script>
 import { Player } from './Player';
 import { InputHandler } from './InputHandler';
-import mageWalkImg from '@/assets/Lancer/Walk.png';
-import mageAttackImg from '@/assets/Lancer/Attack.png';
-import mageData from '@/assets/Lancer/Lancer.json';
+import mageWalkImg from '@/assets/Mage/Walk.png';
+import mageAttackImg from '@/assets/Mage/Attack.png';
+import mageData from '@/assets/Mage/Mage.json';
 import saberWalkImg from '@/assets/Saber/Walk.png';
-
+import saberAttackImg from '@/assets/Saber/Attack.png';
+import saberData from '@/assets/Saber/Saber.json';
+import lancerWalkImg from '@/assets/Lancer/Walk.png';
+import lancerAttackImg from '@/assets/Lancer/Attack.png';
+import lancerData from '@/assets/Lancer/Lancer.json';
+import archerWalkImg from '@/assets/Archer/Walk.png';
+import archerAttackImg from '@/assets/Archer/Attack.png';
+import archerData from '@/assets/Archer/Archer.json';
+import music from '@/assets/music.mp3';
+import soundEffect from '@/assets/attackSound.wav';
 
 export default {
   name: 'Game',
@@ -21,29 +34,32 @@ export default {
       game: null,
       ctx: null,
       JsonData: mageData,
+      JsonDataP2: mageData,
       walkingFrames: new Image(),
       attackingFrames: new Image(),
+      walkingFramesP2: new Image(),
+      attackingFramesP2: new Image(),
       imagesLoaded: 0,
       gameStarted: false,
       gameStates: ["menu", "select", "game"],
       gameState: "menu",
       player2Logged: false,
       player1Logged: false,
-      sprites: []
+      songPlay: new Audio(),
+      soundEffect: new Audio(),
+      isPlaying: false,
     };
   },
   mounted() {
-    this.checkAndUpdateLogP1();
     this.gameState = this.gameStates[0];
     this.dibujar();
     window.addEventListener('resize', this.dibujar);
     this.walkingFrames.src = mageWalkImg;
     this.attackingFrames.src = mageAttackImg;
-    this.walkingFrames.onload = ()=>{
-      this.imagesLoaded++;
-      this.sprites.push(this.walkingFrames)
-    };
-
+    this.walkingFramesP2.src = mageWalkImg;
+    this.attackingFramesP2.src = mageAttackImg;
+    this.songPlay.src = music;
+    this.soundEffect.src = soundEffect;
   },
   methods: {
     dibujar() {
@@ -77,6 +93,8 @@ export default {
           break;
       }
     },
+
+    //Dibujo en el canvas del primer menu del juego.
     startGameMenu(){
       const buttons = [
         { text: 'Jugar', x: this.$refs.canvas.width/2, y: this.$refs.canvas.height/6, width: 100, height: 20 },
@@ -116,16 +134,10 @@ export default {
       const handleButtonClick = (buttonText) => {
         switch(buttonText) {
           case 'Jugar':
-            if (this.player1Logged) {
-              console.log("Salir");
-              this.$refs.canvas.removeEventListener('click', handleClick);
-              this.gameState = this.gameStates[2];
-              this.dibujar();
-            }else{
-              //Agregar metodo para mandar al usuario al login
-              console.log("falta logear");
-            }
-            
+            console.log("Salir");
+            this.$refs.canvas.removeEventListener('click', handleClick);
+            this.gameState = this.gameStates[2];
+            this.dibujar();
             break;
           case 'Opciones':
             alert('Abriendo opciones...');
@@ -141,20 +153,23 @@ export default {
       this.$refs.canvas.addEventListener('click', handleClick);
       drawMenu();
     },
+    //Dibujo en el canvas del menu de seleccion de personaje
     startSelectMenu(){
-      let selectedC1 = "Saber";
-      let selectedC2 = "Saber";
+      let characters = ["Saber", "Archer", "Lancer", "Mage"];
+      let selectedC1 = 0; // Índice de personaje para el jugador 1
+      let selectedC2 = 0; // Índice de personaje para el jugador 2
 
       const buttons = [
-        { text: 'imagen'},
         { text: 'anterior', player: 1, x: 10, y: 50+12.5, width: 10, height: 25 },
         { text: 'siguiente', player: 1, x: 90, y: 50+12.5, width: 10, height: 25 },
-        { text: 'anterior', player: 2, x: 490, y: 50+12.5, width: 10, height: 25 },
-        { text: 'siguiente', player: 2, x: 510, y: 50+12.5, width: 10, height: 25  }
+        { text: 'anterior', player: 2, x: 430, y: 50+12.5, width: 10, height: 25 },
+        { text: 'siguiente', player: 2, x: 510, y: 50+12.5, width: 10, height: 25  },
+        { text: 'Listo', player: 1, x: 40, y: 50+25, width: 10, height: 25 },
+        { text: 'Listo', player: 2, x: 460, y: 50+25, width: 10, height: 25 },
       ];
 
       const drawButton = (button) => {
-        this.ctx.fillStyle = 'gray';
+        this.ctx.fillStyle = 'black';
         this.ctx.fillRect(button.x-button.width/2, button.y, button.width, button.height);
         this.ctx.fillStyle = 'white';
         this.ctx.font = '15px Arial';
@@ -184,7 +199,7 @@ export default {
         });
       };
       const drawCharacters =()=>{
-        this.ctx.draw
+        this.ctx.drawImage()
       };
 
       const handleButtonClick = (buttonText) => {
@@ -207,8 +222,9 @@ export default {
       this.$refs.canvas.addEventListener('click', handleClick);
       drawMenu();
     },
+    // Loop del juego, aqui es donde el juego inicia y se ve la interaccion con los input.
     startGame() {
-      this.game = new this.Game(this.$refs.canvas.width, this.$refs.canvas.height, this.JsonData, this.walkingFrames, this.attackingFrames);
+      this.game = new this.Game(this.$refs.canvas.width, this.$refs.canvas.height, this.JsonData, this.walkingFrames, this.attackingFrames, this.JsonDataP2, this.walkingFramesP2, this.attackingFramesP2);
       let lastTime = performance.now();
       let frameCount = 0;
       let fps = 0;
@@ -224,32 +240,43 @@ export default {
         }
 
         this.ctx.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
-        this.game.update(deltaTime);
+        this.game.update();
         this.game.draw(this.ctx);
         requestAnimationFrame(animate);
       };
 
       requestAnimationFrame(animate);
     },
+    // Clase encargada de 
     Game: class {
-      constructor(width, height, JsonData, walkingFrames, attackingFrames) {
+      constructor(width, height, JsonData, walkingFrames, attackingFrames, JsonDataP2, walkingFramesP2, attackingFramesP2) {
         this.width = width;
         this.height = height;
-        this.player = new Player(this, JsonData, walkingFrames, attackingFrames);
+        this.player = new Player(this, JsonData, walkingFrames, attackingFrames, 0, 125, {"up":"w","left":"a","down":"s","rigth":"d","attack":"q"});
+        this.player2 = new Player(this, JsonDataP2, walkingFramesP2, attackingFramesP2, 500, 125, {"up":"i","left":"j","down":"k","rigth":"l","attack":"u"});
         this.input = new InputHandler();
       }
-      update(fps) {
-        this.player.update(this.input.keys, fps);
+      update() {
+        this.player.update(this.input.keys);
+        this.player2.update(this.input.keys);
       }
       draw(context) {
         this.player.draw(context);
+        this.player2.draw(context);
       }
     },
     destroyed() {
       window.removeEventListener('resize', this.dibujar);
     },
-    checkAndUpdateLogP1(){
-      this.player1Logged = true;
+
+    //Metodos para parar o continuar la musica
+    playMusic(){
+      this.songPlay.play();
+      this.isPlaying = true;
+    },
+    stopMusic(){
+      this.songPlay.pause();
+      this.isPlaying = false;
     }
   }
 };
