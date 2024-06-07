@@ -214,7 +214,6 @@ export class Player {
   }
   getPosition() {
     console.log(this.x, this.y, this.width, this.height);
-    console.log("frame= " + this.frame);
     return {
       // x: this.x,
       // y: this.y,

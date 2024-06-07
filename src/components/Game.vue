@@ -57,9 +57,9 @@ data() {
     startingImages: null,
     allJsonsDatas: null,
     // Logica para saber el nombre del usuario logeado.
-    authStore: useAuthStore(),
-    isAuthenticated: ref(this.authStore.isAuthenticated),
-    nombreUser: ref(this.authStore.user?.username)
+    //authStore: useAuthStore(),
+    //isAuthenticated: ref(this.authStore.isAuthenticated),
+    //nombreUser: ref(this.authStore.user?.username)
     //nombreUser: ""
   };
 },
@@ -462,6 +462,8 @@ methods: {
       this.player.setPlayerN(1);
       this.player2.setPlayerN(2);
       this.input = new InputHandler();
+      console.log(this.player.getPosition());
+      console.log(this.player.x);
     }
     // // Método para manejar el ataque del jugador 1 al jugador 2
     // player1Attacks() {
