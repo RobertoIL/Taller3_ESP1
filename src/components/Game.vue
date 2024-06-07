@@ -1,5 +1,5 @@
 <template>
-  <main class="bg-gray-800">
+  <main class="">
     <div class="container" ref="canvasContainer">
       <div class="canvas-container">
           <canvas id="canvas1" ref="canvas"></canvas>
@@ -463,13 +463,48 @@ methods: {
       this.player2.setPlayerN(2);
       this.input = new InputHandler();
     }
+    // // Método para manejar el ataque del jugador 1 al jugador 2
+    // player1Attacks() {
+    //   if (this.player.isAttacking()) {
+    //     this.player2.receiveDamage(this.player.attackDamage);
+    //   }
+    // }
+
+    // // Método para manejar el ataque del jugador 2 al jugador 1
+    // player2Attacks() {
+    //   if (this.player2.isAttacking()) {
+    //     this.player.receiveDamage(this.player2.attackDamage);
+    //   }
+    // }
     update() {
       this.player.update(this.input.keys);
       this.player2.update(this.input.keys);
-    }
+
+      if (this.checkCollision()) {
+        if (this.player.isAttacking()) {
+        this.player2.receiveDamage(this.player.damage, this.ctx);
+      }
+        if (this.player2.isAttacking()) {
+          this.player.receiveDamage(this.player2.damage, this.ctx);
+        }
+      }
+}
     draw(context) {
       this.player.draw(context);
       this.player2.draw(context);
+    }
+    checkCollision() {
+      const player1Pos = this.player.getPosition();
+      const player2Pos = this.player2.getPosition();
+
+      if (player1Pos.x < player2Pos.x + player2Pos.width &&
+        player1Pos.x + player1Pos.width > player2Pos.x &&
+        player1Pos.y < player2Pos.y + player2Pos.height &&
+        player1Pos.y + player1Pos.height > player2Pos.y) {
+        // Los jugadores están colisionando
+        return true;
+      }
+      return false;
     }
   },
   destroyed() {
