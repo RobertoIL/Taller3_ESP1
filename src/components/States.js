@@ -24,6 +24,7 @@ export class Idle extends State{
         this.player = player;
         this.fila = 0;
         this.columna = 0;
+        this.maxColumna = this.player.walkFrames.length/4;
         this.lastDirection = this.player.currentDirection;
         this.gameFrame = 0;
         this.staggerFrame = 25;
@@ -42,8 +43,8 @@ export class Idle extends State{
             this.player.setState(states.ATTACKING)
         }else{
             if (this.gameFrame % this.staggerFrame == 0) {
-                if (this.fila != 8){
-                    this.fila = 8;
+                if (this.fila != this.maxColumna-1){
+                    this.fila = this.maxColumna-1;
                 }else{
                     this.fila = 0;
                 }
@@ -52,7 +53,7 @@ export class Idle extends State{
             if (this.gameFrame === Number.MAX_VALUE-100) {
                 this.gameFrame = 0;
             }
-            this.player.frame = this.player.walkFrames[this.fila + this.columna*9];
+            this.player.frame = this.player.walkFrames[this.fila + this.columna*this.maxColumna];
         }
     }
     actualizarDireccion(){
@@ -146,6 +147,7 @@ export class Attacking extends State{
         this.maxFila = (this.player.attackFrames.length/4)-1;
         this.fila = 0;
         this.columna = 0;
+        this.maxColumna = this.player.attackFrames.length/4;
         this.lastDirection = this.player.currentDirection;
         this.gameFrame = 0;
         this.staggerFrame = 15;
@@ -165,9 +167,9 @@ export class Attacking extends State{
             this.player.setState(states.IDLE);
         }else if(input.includes(teclas.attack) && !this.atacando){
             this.actualizarDireccion();
-        }else{
+        }else if(this.atacando){
             if (this.gameFrame % this.staggerFrame == 0 && this.gameFrame != 0) {
-                if (this.fila < this.maxFila){
+                if (this.fila < this.maxColumna-1){
                     this.fila++;
                 }else{
                     this.atacando = false;
@@ -181,7 +183,7 @@ export class Attacking extends State{
             if (this.gameFrame === Number.MAX_VALUE-100) {
                 this.gameFrame = 0;
             }
-            this.player.frame = this.player.attackFrames[this.fila + this.columna*8];
+            this.player.frame = this.player.attackFrames[this.fila + this.columna*this.maxColumna];
         }
     }
     actualizarDireccion(){
